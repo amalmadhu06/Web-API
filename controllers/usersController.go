@@ -145,12 +145,21 @@ func Login(c *gin.Context) {
 	})
 }
 
+// -------------------------------------------------FUNCTION Logout------------------------------------------------------------------------
+func Logout(c *gin.Context) {
+	// if cookie is present, set the expiry to -1 and direct to login page
+	c.Writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("Authorization", "", -1, "", "", false, true)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "logged out successfully",
+	})
+}
+
 // ----------------------------------------------------------FUNCTION validate -----------------------------------------------------------------------
 
 func Validate(c *gin.Context) {
-
 	user, _ := c.Get("user")
-
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})

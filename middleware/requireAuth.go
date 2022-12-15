@@ -16,7 +16,6 @@ import (
 )
 
 func RequireAuth(c *gin.Context) {
-	fmt.Println("Check completed by middleware	")
 
 	// 1.Get the cookie off the request
 
