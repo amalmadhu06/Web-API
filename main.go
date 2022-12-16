@@ -27,6 +27,7 @@ func main() {
 
 	r.POST("/admin/createAdmin", controllers.CreateAdmin)
 	r.POST("/admin/login", controllers.AdminLogin)
+	r.GET("/admin/logout", controllers.AdminLogout)
 
 	r.Run()
 
