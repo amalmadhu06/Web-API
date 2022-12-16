@@ -17,11 +17,16 @@ func init() {
 func main() {
 	r := gin.Default()
 
-	//routes
+	//user routes
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 	r.GET("logout", controllers.Logout)
+
+	// admin routes
+
+	r.POST("/admin/createAdmin", controllers.CreateAdmin)
+	r.POST("/admin/login", controllers.AdminLogin)
 
 	r.Run()
 

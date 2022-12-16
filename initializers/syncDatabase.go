@@ -4,7 +4,8 @@ import "jwt_auth/models"
 
 func SyncDatabase() {
 
-	DB.AutoMigrate(&models.User{}) //this will create a new table in our databse (migrate....)
+	DB.AutoMigrate(&models.User{})
+	//this will create a new table in our databse (migrate....)
 	//abouve line of code created a table name 'user' in databse 'test3'
 
 	// schema of the table users
@@ -22,5 +23,8 @@ func SyncDatabase() {
 	// 	 "users_pkey" PRIMARY KEY, btree (id)
 	// 	 "idx_users_deleted_at" btree (deleted_at)
 	// 	 "users_email_key" UNIQUE CONSTRAINT, btree (email)
+
+	DB.AutoMigrate(&models.Admin{})
+	// this will create a new table in our database for storing admin credentials
 
 }

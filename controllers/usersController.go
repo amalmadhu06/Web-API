@@ -149,7 +149,7 @@ func Login(c *gin.Context) {
 func Logout(c *gin.Context) {
 	// if cookie is present, set the expiry to -1 and direct to login page
 	c.Writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-	c.SetSameSite(http.SameSiteLaxMode)
+	// c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", "", -1, "", "", false, true)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "logged out successfully",
