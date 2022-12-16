@@ -55,6 +55,7 @@ func Signup(c *gin.Context) {
 		})
 		return
 	}
+	
 
 	// 4. respond
 	// upon successful user creation, sending this back

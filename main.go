@@ -18,6 +18,7 @@ func main() {
 	r := gin.Default()
 
 	//user routes
+
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
@@ -25,9 +26,17 @@ func main() {
 
 	// admin routes
 
-	r.POST("/admin/createAdmin", controllers.CreateAdmin)
 	r.POST("/admin/login", controllers.AdminLogin)
+	r.GET("/admin/validate", middleware.RequireAuthAdmin, controllers.AdminValidate)
 	r.GET("/admin/logout", controllers.AdminLogout)
+
+	r.POST("/admin/createAdmin", middleware.RequireAuthAdmin, controllers.CreateAdmin)
+
+	//crud operation by admin on user
+
+	r.DELETE("admin/deleteUser", middleware.RequireAuthAdmin, controllers.DeleteUser)
+	r.POST("admin/createUser", middleware.RequireAuthAdmin, controllers.CreateUser)
+	r.POST("admin/updateUserPassword", middleware.RequireAuthAdmin, controllers.UpdateUserPassword)
 
 	r.Run()
 

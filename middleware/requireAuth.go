@@ -58,7 +58,7 @@ func RequireAuth(c *gin.Context) {
 
 		}
 
-		// 5. Attach to req
+		// 5. Attach to response
 
 		// sending the response with user object
 		fmt.Println(user)

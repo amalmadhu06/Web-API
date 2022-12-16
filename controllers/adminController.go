@@ -132,17 +132,128 @@ func AdminLogout(c *gin.Context) {
 	})
 }
 
+// --------------------------------------FUNCTION AdminValidate------------------------------------------------------------
+func AdminValidate(c *gin.Context) {
+	admin, _ := c.Get("admin")
+	c.JSON(http.StatusOK, gin.H{
+		"message": admin,
+	})
+
+}
+
 // --------------------------------------FUNCTION deleteUser------------------------------------------------------------
-// func DeleteUser() {
+func DeleteUser(c *gin.Context) {
 
-// }
+	// 1. get the username and email from the request body
+	var body struct {
+		Email string
+	}
 
-// --------------------------------------FUNCTION addUser------------------------------------------------------------
-// func AddUser() {
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read the body",
+		})
+		return
+	}
+	// 2. find the corresponding user from the database
 
-// }
+	var user models.User
 
-// --------------------------------------FUNCTION adminLogin------------------------------------------------------------
-// func UpdateUser() {
+	initializers.DB.First(&user, "email = ?", body.Email)
 
-// }
+	if user.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "No such user exists",
+		})
+		return
+	}
+
+	// 3. delete the value from the database
+
+	initializers.DB.Delete(&user) //soft delete : updates current time in deletedAt coloumn in users table
+
+	// 4. send response
+	c.JSON(http.StatusOK, gin.H{
+		"message": "user deleted successfully",
+	})
+}
+
+// --------------------------------------FUNCTION CreateUser------------------------------------------------------------
+func CreateUser(c *gin.Context) {
+	// 1. get the email and password of the the request body
+	var body struct {
+		Email    string
+		Password string
+	}
+
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read the body",
+		})
+		return
+	}
+
+	// 2. hash the password
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to hash the password",
+		})
+		return
+	}
+	user := models.User{Email: body.Email, Password: string(hash)}
+
+	result := initializers.DB.Create(&user)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to create user",
+		})
+		return
+	}
+
+	// 4. respond
+	// upon successful user creation, sending this back
+	c.JSON(http.StatusOK, gin.H{
+		"message": "user created successfully",
+	})
+
+}
+
+// --------------------------------------FUNCTION UpdateUserPassword------------------------------------------------------------
+func UpdateUserPassword(c *gin.Context) {
+	var body struct {
+		Email       string
+		NewPassword string
+	}
+
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read the body",
+		})
+		return
+	}
+
+	// 2. hash the password
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.NewPassword), 10)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to hash the password",
+		})
+		return
+	}
+	user := models.User{Email: body.Email, Password: string(hash)}
+
+	result := initializers.DB.Update("password", user.Password)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to update password",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "successfully changed password",
+	})
+}
