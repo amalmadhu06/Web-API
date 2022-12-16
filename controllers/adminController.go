@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// ----------------------FUNCTION CreateAdmin---------------
+// ----------------------FUNCTION CreateAdmin---------------------------------------------------------------------------
 
 func CreateAdmin(c *gin.Context) {
 	var body struct {
@@ -124,9 +124,13 @@ func AdminLogin(c *gin.Context) {
 }
 
 // --------------------------------------FUNCTION AdminLogout------------------------------------------------------------
-// func AdminLogout() {
-
-// }
+func AdminLogout(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.SetCookie("AdminAuth", "", -1, "", "", false, true)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logged out successfully",
+	})
+}
 
 // --------------------------------------FUNCTION deleteUser------------------------------------------------------------
 // func DeleteUser() {
