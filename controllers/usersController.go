@@ -142,6 +142,7 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		// directly sending the token as response (not recommneded, so commenting it)
 		// "token": tokenString,
+		"message": "Logged in successfully",
 	})
 }
 
