@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"jwt_auth/initializers"
 	"jwt_auth/models"
 	"net/http"
@@ -242,9 +243,11 @@ func UpdateUserPassword(c *gin.Context) {
 		})
 		return
 	}
-	user := models.User{Email: body.Email, Password: string(hash)}
+	user := models.User{Password: string(hash)}
 
-	result := initializers.DB.Update("password", user.Password)
+	result := initializers.DB.Model(&user).Where("email=?", body.Email).Update("password", string(hash))
+
+	fmt.Println(result)
 
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

@@ -166,3 +166,17 @@ func Validate(c *gin.Context) {
 		"message": user,
 	})
 }
+
+
+// ----------------------------------------------------------FUNCTION homePage -----------------------------------------------------------------------
+
+func HomePage(c *gin.Context){
+
+	// 1. check if the user is already logged in
+	//    requireAuth.go
+	// 2. if yes, give access to homepage
+	
+	// 3. else, route to login page
+
+}
+
