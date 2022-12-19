@@ -1,6 +1,6 @@
 # JWT Authentication in Go Lang
 
-Packages used are :
+## Packages used are :
 ### `gorm.io/gorm` <br>
 GORM helps Go programs to work with data stored in database using the language's built in data types, rather than having to use SQL queries
 ### `grom.io/driver/postgres` <br>
@@ -15,3 +15,39 @@ JWT helps us to use JSON web tokens instead of cookies
  The godotenv package is a Go package that provides a way to load environment variables from a file into the environment of  Go application
  ###  `CompileDaemon` <br>
  Tracks .go files in a directory and invokes `go build` if a file is changed
+
+ ## Endpoints
+
+ ### POST : User Signup <br>
+ `http://localhost:3000/signup`
+
+ To create a new user.
+
+Accepts username and password from the user. Unique email id contraint is added with GORM
+
+Hashes the password using crypto/bcrypt and stores it in the database(postgres)
+
+Body : raw json
+
+
+`{
+  "email": "test4",
+  "password": "test4"
+}`
+
+### POST : User Login <br>
+ `http://localhost:3000/login`
+
+ Login receives email and password from the user and verfies it.
+
+If the email id and password matches with the hased password stored in the database, it will create a joken using JWT and sends it as a cookie in response.
+
+Body : raw json
+
+
+`{
+  "email": "test4",
+  "password": "test4"
+}`
+
+
