@@ -236,9 +236,6 @@ func UpdateUserPassword(c *gin.Context) {
 	}
 
 	// 2. hash the password
-	fmt.Println("debugging ---------------------")
-	fmt.Println(body.NewPassword)
-	fmt.Println("debugging ---------------------")
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.NewPassword), 10)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -285,8 +282,8 @@ func ViewAllUsers(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(user)
-	fmt.Println(count)
+	// fmt.Println(user)
+	// fmt.Println(count)
 	for index, i := range user {
 		if index < count {
 
@@ -299,4 +296,40 @@ func ViewAllUsers(c *gin.Context) {
 
 		}
 	}
+}
+
+func ViewUser(c *gin.Context) {
+	// 1. Get the email id from the request body
+	// 2. Find the matching record from db
+	// 3. send it back with response
+
+	var body struct {
+		Email string `json:"email" binding:"required,email"`
+	}
+
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read the body",
+		})
+		return
+	}
+	var user models.User
+
+	result := initializers.DB.Raw("SELECT id,email FROM users WHERE email=?", body.Email).Scan(&user)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "no such user exists",
+		})
+		return
+	}
+
+	// fmt.Print("-------------look here--------------")
+	// fmt.Println(user.Email, user.ID)
+
+	c.JSON(http.StatusOK, gin.H{
+		"id":    user.ID,
+		"email": user.Email,
+	})
+
 }

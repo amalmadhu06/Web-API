@@ -19,14 +19,14 @@ func Signup(c *gin.Context) {
 
 	//struct for holding the values that come from request
 	var body struct {
-		Email    string
-		Password string
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required,min=6"`
 	}
 
 	//checking if body is present, if not, will respond with below status
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body",
+			"error": "Invalid input, please check",
 		})
 		return
 	}
@@ -44,7 +44,7 @@ func Signup(c *gin.Context) {
 
 	//for this, we need to save the credentials to the databse.
 	//following lines will help to do this
-
+ 
 	user := models.User{Email: body.Email, Password: string(hash)}
 
 	result := initializers.DB.Create(&user)
@@ -55,7 +55,6 @@ func Signup(c *gin.Context) {
 		})
 		return
 	}
-	
 
 	// 4. respond
 	// upon successful user creation, sending this back
@@ -167,16 +166,14 @@ func Validate(c *gin.Context) {
 	})
 }
 
-
 // ----------------------------------------------------------FUNCTION homePage -----------------------------------------------------------------------
 
-func HomePage(c *gin.Context){
+func HomePage(c *gin.Context) {
 
 	// 1. check if the user is already logged in
 	//    requireAuth.go
 	// 2. if yes, give access to homepage
-	
+
 	// 3. else, route to login page
 
 }
-

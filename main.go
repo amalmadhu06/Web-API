@@ -35,6 +35,7 @@ func main() {
 
 	//crud operation by admin on user
 
+	r.POST("admin/viewUser", middleware.RequireAuthAdmin, controllers.ViewUser)
 	r.GET("admin/viewAllUsers", middleware.RequireAuthAdmin, controllers.ViewAllUsers)
 	r.DELETE("admin/deleteUser", middleware.RequireAuthAdmin, controllers.DeleteUser)
 	r.POST("admin/createUser", middleware.RequireAuthAdmin, controllers.CreateUser)
